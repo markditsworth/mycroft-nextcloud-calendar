@@ -34,7 +34,7 @@ class NextcloudCalendarSkill(MycroftSkill):
     
     def getConfigs(self):
         try:
-            config = self.config_core.get("RemoteComputerSkill", {})
+            config = self.config_core.get("NextcloudCalendarSkill", {})
             if not config == {}:
                 server_url = str(config.get("server_url"))
                 user = str(config.get("user"))
