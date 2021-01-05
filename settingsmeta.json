@@ -27,7 +27,7 @@
                         },
                         {
                             "name": "password",
-                            "type": "text",
+                            "type": "password",
                             "label": "Password:",
                             "value": ""
                         }
