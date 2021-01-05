@@ -20,9 +20,9 @@ from mycroft.skills.core import MycroftSkill
 from mycroft.skills.core import intent_handler
 from mycroft.util.parse import extract_duration, extract_datetime
 
-class NextcloudCalendarkill(MycroftSkill):
+class NextcloudCalendarSkill(MycroftSkill):
     def __init__(self):
-        super(NextcloudCalendarkill, self).__init__(name="NextcloudCalendarSkill")
+        super(NextcloudCalendarSkill, self).__init__(name="NextcloudCalendarSkill")
         
         self.calendarToName = {'madison-1':"madison's",'personal':'your','milo':"milo's"}
         self.nameToCalendar = {"madison":'madison-1', "madison's":'madison-1',
@@ -225,4 +225,4 @@ class NextcloudCalendarkill(MycroftSkill):
         pass
     
 def create_skill():
-    return NextcloudCalendarkill()
+    return NextcloudCalendarSkill()
