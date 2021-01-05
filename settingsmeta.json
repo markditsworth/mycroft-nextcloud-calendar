@@ -1,0 +1,38 @@
+{
+    "name": "Nextcloud Calendar",
+    "color": "#22a7f0",
+    "skillMetadata":
+        {
+           "sections":
+            [
+                {
+                   "name": "Configuration",
+                   "fields":
+                    [
+                        {
+                            "type": "label",
+                            "label": "Manage your Nextcloud calendar."
+                        },
+                        {
+                            "name": "server_url",
+                            "type": "text",
+                            "label": "URL:",
+                            "value": ""
+                        },
+                        {
+                            "name": "user",
+                            "type": "text",
+                            "label": "User Name:",
+                            "value": ""
+                        },
+                        {
+                            "name": "password",
+                            "type": "text",
+                            "label": "Password:",
+                            "value": ""
+                        }
+                    ]
+                }
+            ]
+        }
+}

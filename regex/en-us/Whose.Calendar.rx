@@ -1,0 +1,5 @@
+.* (do|does) (?P<Owner>.*) have .*
+.* (is|on|list|to|in) (?P<Owner>.*) (calendar|agenda|schedule|plan|planner) .*
+.* does (?<Owner>.*) (day|week) .*
+.* (am|is) (?<Owner>.*) (today|this week)
+.* for (?<Owner>.*)
