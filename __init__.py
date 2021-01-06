@@ -85,7 +85,9 @@ class NextcloudCalendarSkill(MycroftSkill):
     def getCalendar(self, calendar_name, url, user, password):
         try:
             URL = 'https://{}/remote.php/dav/calendars/{}'.format(url,user)
+            self.log.info('url: {}'.format(url))
             calURL = '{}/{}'.format(URL,calendar_name)
+            self.log.info('calendar url: {}'.format(calURL))
             client = caldav.DAVClient(url=URL, username=user, password=password)
             calendar = caldav.Calendar(client=client, url=calURL)
             self.log.info('got calendar {}'.format(calendar.name))
