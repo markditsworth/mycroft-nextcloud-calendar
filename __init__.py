@@ -172,9 +172,11 @@ class NextcloudCalendarSkill(MycroftSkill):
         
         if owner is None:
             owner = self.get_response('ask.calendar.owner')
+            self.log.info('using owner: {}'.format(owner))
         
         try:
             calName = self.nameToCalendar[owner]
+            self.log.info('converting {} to calendar {}'.format(owner,calName))
         except KeyError:
             self.speak_dialog('no.calendar.found.error',{'name':owner})
             return
