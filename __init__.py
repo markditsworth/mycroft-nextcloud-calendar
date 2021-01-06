@@ -130,7 +130,7 @@ class NextcloudCalendarSkill(MycroftSkill):
         
         return "{}:{}{}".format(H,M,tod)
     
-    def confirmEventDetails(self, start, end, name, owner):
+    def confirmEventDetails(self, start, end, name):
         ordinal = lambda n: "%d%s" % (n,"tsnrhtdd"[(n//10%10!=1)*(n%10<4)*n%10::4])
         monthString = ['','January','February','March','April','May','June','July',
                        'August','September','October','November','December']
@@ -200,8 +200,8 @@ class NextcloudCalendarSkill(MycroftSkill):
                                       {'event_name': eventName,
                                        'confirmation_text': self.confirmEventDetails(start_time,
                                                                                      end_time,
-                                                                                     eventName,
-                                                                                     self.calendarToName[calName])})
+                                                                                     eventName),
+                                       'owner': self.calendarToName[calName]})
         if confirmation == 'no':
             self.speak_dialog('confirmation.failed')
 
