@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import caldav
+import hashlib
 
 from datetime import datetime as dt
 from datetime import timezone
@@ -55,6 +56,7 @@ class NextcloudCalendarSkill(MycroftSkill):
         tstamp = dt.now(tz=timezone.utc).strftime("%Y%m%dT%H%M%SZ")
         start_utc = start.astimezone(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
         end_utc = end.astimezone(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+        _id = hashlib.sha1(bytes(tstamp+name,'utf-8')).hexdigest()
         if rule is not None:
             rrule = "FREQ={}\n".format(rule)
         else:
@@ -63,14 +65,15 @@ class NextcloudCalendarSkill(MycroftSkill):
         VERSION:2.0
         PRODID:-//Sabre//Sabre VObject 4.3.0//EN
         BEGIN:VEVENT
+        UID:{}
         DTSTAMP:{}
         DTSTART:{}
         DTEND:{}
         {}SUMMARY:{}
         END:VEVENT
         END:VCALENDAR
-        """.format(tstamp, start_utc, end_utc, rrule, name)
-        return s
+        """.format(_id, tstamp, start_utc, end_utc, rrule, name)
+        return ''.join(s.split('\t'))
     
     def makeEvent(self, calendarObj, start, end, name, rule=None, owner='your'):
         eventString = self.makeEventString(name, start, end, rule=rule)
