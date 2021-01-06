@@ -31,7 +31,8 @@ class NextcloudCalendarSkill(MycroftSkill):
                           "my lowe":'milo', "my lowe's":'milo',
                           "my low":"milo", "my low's":"milo",
                           "me":"personal", "my":"personal", "i":"personal",
-                          "mine":"personal", "myself":"personal"}
+                          "mine":"personal", "myself":"personal", "my own": "personal",
+                          "9": "personal", "mind": "personal"} # add a few similar-sounding words
     
     def getConfigs(self):
         try:
@@ -89,14 +90,10 @@ END:VCALENDAR
     def getCalendar(self, calendar_name, url, user, password):
         try:
             URL = 'https://{}/remote.php/dav/calendars/{}'.format(url,user)
-            self.log.info('url: {}'.format(url))
             calURL = '{}/{}'.format(URL,calendar_name)
             self.log.info('calendar url: {}'.format(calURL))
             client = caldav.DAVClient(url=URL, username=user, password=password)
-            self.log.info("client: {}".format(client))
             calendar = caldav.Calendar(client=client, url=calURL)
-            self.log.info("calendar: {}".format(calendar))
-            self.log.info('got calendar {}'.format(calendar.url))
             return calendar
         
         except Exception as e:
@@ -184,7 +181,6 @@ END:VCALENDAR
         
         try:
             calName = self.nameToCalendar[owner]
-            self.log.info('converting {} to calendar {}'.format(owner,calName))
         except KeyError:
             self.speak_dialog('no.calendar.found.error',{'name':owner})
             return
