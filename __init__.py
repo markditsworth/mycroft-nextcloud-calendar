@@ -62,18 +62,19 @@ class NextcloudCalendarSkill(MycroftSkill):
         else:
             rrule = ""
         s = """BEGIN:VCALENDAR
-        VERSION:2.0
-        PRODID:-//Sabre//Sabre VObject 4.3.0//EN
-        BEGIN:VEVENT
-        UID:{}
-        DTSTAMP:{}
-        DTSTART:{}
-        DTEND:{}
-        {}SUMMARY:{}
-        END:VEVENT
-        END:VCALENDAR
-        """.format(_id, tstamp, start_utc, end_utc, rrule, name)
-        return ''.join(s.split('\t'))
+VERSION:2.0
+PRODID:-//Sabre//Sabre VObject 4.3.0//EN
+BEGIN:VEVENT
+UID:{}
+DTSTAMP:{}
+DTSTART:{}        
+DTEND:{}
+{}SUMMARY:{}        
+END:VEVENT
+END:VCALENDAR
+"""
+        s = s.format(_id, tstamp, start_utc, end_utc, rrule, name)
+        return s
     
     def makeEvent(self, calendarObj, start, end, name, rule=None, owner='your'):
         eventString = self.makeEventString(name, start, end, rule=rule)
