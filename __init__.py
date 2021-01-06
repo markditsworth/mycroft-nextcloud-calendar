@@ -199,7 +199,7 @@ class NextcloudCalendarSkill(MycroftSkill):
                                        'confirmation_text': self.confirmEventDetails(start_time,
                                                                                      end_time,
                                                                                      eventName,
-                                                                                     self.calendarToName(calName))})
+                                                                                     self.calendarToName[calName])})
         if confirmation == 'no':
             self.speak_dialog('confirmation.failed')
 
@@ -209,7 +209,7 @@ class NextcloudCalendarSkill(MycroftSkill):
                 pass
             else:
                 calendar = self.getCalendar(calName, url, user, password)
-                self.makeEvent(calendar, start_time, end_time, eventName, owner=self.calendarToName(calName))
+                self.makeEvent(calendar, start_time, end_time, eventName, owner=self.calendarToName[calName])
         else:
             self.speak('sorry i did not understand.')
 
