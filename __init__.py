@@ -89,8 +89,10 @@ class NextcloudCalendarSkill(MycroftSkill):
             calURL = '{}/{}'.format(URL,calendar_name)
             self.log.info('calendar url: {}'.format(calURL))
             client = caldav.DAVClient(url=URL, username=user, password=password)
+            self.log.info("client: {}".format(client))
             calendar = caldav.Calendar(client=client, url=calURL)
-            self.log.info('got calendar {}'.format(calendar.name))
+            self.log.info("calendar: {}".format(calendar))
+            self.log.info('got calendar {}'.format(calendar.url))
             return calendar
         
         except Exception as e:
