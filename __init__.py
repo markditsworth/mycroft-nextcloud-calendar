@@ -177,7 +177,8 @@ END:VCALENDAR
         
         if owner is None:
             owner = self.get_response('ask.calendar.owner')
-            self.log.info('using owner: {}'.format(owner))
+        
+        self.log.info('using owner: {}'.format(owner))
         
         try:
             calName = self.nameToCalendar[owner]
