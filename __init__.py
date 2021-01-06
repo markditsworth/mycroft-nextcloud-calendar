@@ -174,6 +174,7 @@ END:VCALENDAR
         time_delta,remaining_utt = extract_duration(utt)            # get time duration from utterance
         start_time,remaining_utt = extract_datetime(remaining_utt)  # get time from utterance
         owner = message.data.get('Owner')                           # get calendar owner
+        self.log.info("data: {}".format(message.data))
         
         if owner is None:
             owner = self.get_response('ask.calendar.owner')
