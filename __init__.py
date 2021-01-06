@@ -53,8 +53,8 @@ class NextcloudCalendarSkill(MycroftSkill):
         
     def makeEventString(self, name, start, end, rule=None):
         tstamp = dt.now(tz=timezone.utc).strftime("%Y%m%dT%H%M%SZ")
-        start_utc = start.astimezone(timezone.utc)
-        end_utc = end.astimezone(timezone.utc)
+        start_utc = start.astimezone(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+        end_utc = end.astimezone(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
         if rule is not None:
             rrule = "FREQ={}\n".format(rule)
         else:
@@ -64,8 +64,8 @@ class NextcloudCalendarSkill(MycroftSkill):
         PRODID:-//Sabre//Sabre VObject 4.3.0//EN
         BEGIN:VEVENT
         DTSTAMP:{}
-        DSTART:{}
-        DEND:{}
+        DTSTART:{}
+        DTEND:{}
         {}SUMMARY:{}
         END:VEVENT
         END:VCALENDAR
