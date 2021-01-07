@@ -87,6 +87,28 @@ END:VCALENDAR
             self.speak_dialog('caldav.error',{"method":"creating","kind":"event"})
             self.log.error(e)
             
+    def searchEvents(self, calendarObj, start, end):
+        events = []
+        _events = calendarObj.date_search(start=start.astimezone(timezone.utc),
+                                          end=end.astimezone(timezone.utc))
+        
+        for e in _events:
+            event_dict = {'name': e.vobject_instance.vevent.summary.value.strip(),
+                          'start': e.vobject_instance.vevent.dtstart.value, # will need to convert to TZ
+                          'end': e.vobject_instance.vevent.dtend.value # convert to local tz
+                          }
+            events.append(event_dict)
+            self.log.info('start dt: {}'.format( e.vobject_instance.vevent.dtstart.value))
+        
+        return events
+    
+    def speakEvents(self, events):
+        for e in events:
+            duration_str = self.confirmEventDetails(e['start'], e['end'])
+            self.speak(e['name'] + ' ' + duration_str)
+            for _ in range(1000):                       # small delay to space out events
+                pass
+            
     def getCalendar(self, calendar_name, url, user, password):
         try:
             URL = 'https://{}/remote.php/dav/calendars/{}'.format(url,user)
@@ -135,7 +157,7 @@ END:VCALENDAR
         
         return "{}:{}{}".format(H,M,tod)
     
-    def confirmEventDetails(self, start, end, name):
+    def confirmEventDetails(self, start, end):
         ordinal = lambda n: "%d%s" % (n,"tsnrhtdd"[(n//10%10!=1)*(n%10<4)*n%10::4])
         monthString = ['','January','February','March','April','May','June','July',
                        'August','September','October','November','December']
@@ -205,8 +227,7 @@ END:VCALENDAR
         confirmation = self.ask_yesno('confirm.event',
                                       {'event_name': eventName,
                                        'confirmation_text': self.confirmEventDetails(start_time,
-                                                                                     end_time,
-                                                                                     eventName),
+                                                                                     end_time),
                                        'owner': self.calendarToName[calName]})
         if confirmation == 'no':
             self.speak_dialog('confirmation.failed')
