@@ -1,0 +1,73 @@
+@@grammar::CalendarGrammar
+
+start = expr ;
+
+expr = 
+    | init calendar_owner:ownership calendar [ 'on' ] time_frame:timeframe
+    | init calendar_owner:ownership time_frame:timeframe
+    ;
+
+init
+    =
+    | 'what' ('is'|'am'|'does'|'do'|'are') [ 'on' ]
+    | 'how' 'busy' ('is'|'am')
+    | 'tell' 'me' [ 'about' ]
+    | ('add'|'put'|'create'|'schedule') [ 'a'|'an' ] ('event'|'appointment'|'meeting') ('to'|'on')
+    | ('add'|'put'|'create'|'schedule') 'something' ('to'|'on')
+    ;
+    
+ownership
+    =
+    | 'me'
+    | 'i'
+    | 'my'
+    | "madison"
+    | "milo"
+    | "the" [ "family" ]
+    ;
+    
+day_of_week
+    =
+    | 'sunday'
+    | 'monday'
+    | 'tuesday'
+    | 'wednesday'
+    | 'thursday'
+    | 'friday'
+    | 'saturday'
+    ;
+    
+time
+    =
+    | 'day'
+    | 'weekend'
+    | 'week'
+    | 'afternoon'
+    | 'evening'
+    | 'morning'
+    | 'tomorrow'
+    | 'today'
+    | day_of_week
+    ;
+
+calendar
+    =
+    | 'calendar'
+    | 'agenda'
+    | 'schedule'
+    | 'planner'
+    | 'events'
+    | 'up' 'to'
+    | 'doing'
+    | 'have' 'going'
+    | time
+    ;
+
+relative_modifier
+    =
+    | 'next'
+    | 'this'
+    ;
+    
+timeframe = [ relative_modifier ] time ;
+    
