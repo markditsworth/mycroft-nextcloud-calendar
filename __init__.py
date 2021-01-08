@@ -13,13 +13,16 @@
 # limitations under the License.
 import caldav
 import hashlib
+import peg
+import json
 
+from tatsu.util import asjson
 from datetime import datetime as dt
 from datetime import timezone
 from adapt.intent import IntentBuilder
 from mycroft.skills.core import MycroftSkill
 from mycroft.skills.core import intent_handler
-from mycroft.util.parse import extract_duration, extract_datetime
+from mycroft.util.parse import extract_duration, extract_datetime, normalize
 
 class NextcloudCalendarSkill(MycroftSkill):
     def __init__(self):
@@ -33,6 +36,8 @@ class NextcloudCalendarSkill(MycroftSkill):
                           "me":"personal", "my":"personal", "i":"personal",
                           "mine":"personal", "myself":"personal", "my own": "personal",
                           "9": "personal", "mind": "personal"} # add a few similar-sounding words
+        
+        self.PEGParser = peg.parser()
     
     def getConfigs(self):
         try:
@@ -52,6 +57,14 @@ class NextcloudCalendarSkill(MycroftSkill):
             self.speak_dialog('settings.error')
             self.log.error(e)
             return None, None, None
+    
+    def convertSpokenTimeRangeToDT(self, time_range_string):
+        # attempt to get starting datetime directly
+        try:
+            start_dt = extract_datetime(time_range_string)
+        except Exception as e:
+            pass
+        
         
     def makeEventString(self, name, start, end, rule=None):
         tstamp = dt.now(tz=timezone.utc).strftime("%Y%m%dT%H%M%SZ")
@@ -242,11 +255,25 @@ END:VCALENDAR
         else:
             self.speak('sorry i did not understand.')
 
-    @intent_handler(IntentBuilder("ListEvents").require("List").require("Calendar").
-                    optionally("Whose.Calendar"))
+    @intent_handler(IntentBuilder("ListEvents").require("List").one_of("Calendar","Time"))
     def handle_list_events_intent(self, message):
         utt = message.data['utterance']
-        self.log.info(utt)
+        # normalize and drop "****'s"
+        utt = normalize(utt).replace("'s","")
+        try:
+            ast = self.PEGParser.parse(utt)
+            parsed_utt = asjson(ast)
+            
+            calendar_owner = parsed_utt['calendar_owner']
+            calendar_timeframe = parsed_utt['time_frame']
+        except Exception as e:
+            self.speak('there was an error parsing your utternace')
+            self.log.error(e)
+            return
+        
+        start,end = self.convertSpokenTimeRangeToDT(calendar_timefram)
+        
+        
         
         
 
