@@ -69,6 +69,7 @@ class NextcloudCalendarSkill(MycroftSkill):
                 # is likely 'this week' or 'this weekend'
                 if 'week' in time_range_list:
                     start = dt.now()
+                    
                 elif 'weekend' in time_range_list:
                     # next upcoming saturday
                     now = dt.now()
@@ -116,6 +117,8 @@ class NextcloudCalendarSkill(MycroftSkill):
             else: # afternoon, evening, morning
                 end = start + timedelta(hours=4)
             
+            self.log.info("start: {}".format(start))
+            self.log.info("end: {}".format(end))
             return start, end
                 
             
