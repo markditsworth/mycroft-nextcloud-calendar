@@ -38,7 +38,7 @@ class NextcloudCalendarSkill(MycroftSkill):
                           "mine":"personal", "myself":"personal", "my own": "personal",
                           "9": "personal", "mind": "personal"} # add a few similar-sounding words
         
-        self.PEGParser = peg.parser()
+        self.PEGParser = parser()
     
     def getConfigs(self):
         try:
@@ -333,7 +333,7 @@ END:VCALENDAR
             calendar_owner = 'my'
         
         # parser will return list if timeframe is two words (e.g. ["this", "weekend"])
-        if type(calendar_timefram) == list:
+        if type(calendar_timeframe) == list:
             calendar_timeframe = ' '.join(calendar_timeframe)
         
         start,end = self.convertSpokenTimeRangeToDT(calendar_timeframe)
