@@ -69,9 +69,10 @@ class NextcloudCalendarSkill(MycroftSkill):
                 # is likely 'this week' or 'this weekend'
                 if 'week' in time_range_list:
                     start = dt.now()
-                    
+                    self.log.info('got this week')
                 elif 'weekend' in time_range_list:
                     # next upcoming saturday
+                    self.log.info('got weekend')
                     now = dt.now()
                     current_dow = now.weekday()
                     offset = 5 - current_dow
@@ -90,6 +91,7 @@ class NextcloudCalendarSkill(MycroftSkill):
                 # 'next week' will get parsed undesireably by extract_datetime
                 if time_range_string == "next week":
                     # get next upcoming sunday
+                    self.log.info('got next week')
                     now = dt.now()
                     current_dow = now.weekday()
                     offset = 6 - current_dow
@@ -98,6 +100,7 @@ class NextcloudCalendarSkill(MycroftSkill):
                     start = dt(now.year, now.month, now.day) + timedelta(offset)
                     
                 else:
+                    self.log.info('got something else')
                     start = extracted_dt[0]
             
             # now that the start time is found get the end time from the time string
