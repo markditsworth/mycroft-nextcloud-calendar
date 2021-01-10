@@ -24,6 +24,7 @@ from adapt.intent import IntentBuilder
 from mycroft.skills.core import MycroftSkill
 from mycroft.skills.core import intent_handler
 from mycroft.util.parse import extract_duration, extract_datetime, normalize
+from mycroft.util.time import default_timezone
 
 class NextcloudCalendarSkill(MycroftSkill):
     def __init__(self):
@@ -177,6 +178,7 @@ END:VCALENDAR
             events.append(event_dict)
             self.log.info('start dt: {}'.format( e.vobject_instance.vevent.dtstart.value))
         
+        events.reverse() # put in chronological order
         return events
     
     def speakEvents(self, events):
@@ -343,6 +345,9 @@ END:VCALENDAR
             calendar_timeframe = ' '.join(calendar_timeframe)
         
         start,end = self.convertSpokenTimeRangeToDT(calendar_timeframe)
+        
+        start = start.astimezone(default_timezone())
+        end = end.astimezone(default_timezone())
         
         url, user, password = self.getConfigs()
         calendarObj = self.getCalendar(self.nameToCalendar[calendar_owner], url, user, password)
