@@ -121,8 +121,8 @@ class NextcloudCalendarSkill(MycroftSkill):
             else: # afternoon, evening, morning
                 end = start + timedelta(hours=4)
             
-            start = start.astimezone(default_timezone())
-            end = end.astimezone(default_timezone())
+            #start = start.astimezone(default_timezone())
+            #end = end.astimezone(default_timezone())
             self.log.info("start: {}".format(start))
             self.log.info("end: {}".format(end))
             return start, end
@@ -174,8 +174,8 @@ END:VCALENDAR
         
         for e in _events:
             event_dict = {'name': e.vobject_instance.vevent.summary.value.strip(),
-                          'start': e.vobject_instance.vevent.dtstart.value, # will need to convert to TZ
-                          'end': e.vobject_instance.vevent.dtend.value # convert to local tz
+                          'start': e.vobject_instance.vevent.dtstart.value.astimezone(default_timezone()), # will need to convert to TZ
+                          'end': e.vobject_instance.vevent.dtend.value.astimezone(default_timezone()) # convert to local tz
                           }
             events.append(event_dict)
             self.log.info('start dt: {}'.format( e.vobject_instance.vevent.dtstart.value))
