@@ -112,8 +112,8 @@ class NextcloudCalendarSkill(MycroftSkill):
                 end = dt(start.year, start.month, start.day, 23, 59) + timedelta(1)
             
             elif 'week' in time_range_string:
-                starting_dow = start.day
-                if starting_dow == 6:
+                starting_dow = start.weekday()
+                if starting_dow == 6: # if it is sunday, +6 days
                     end = dt(start.year, start.month, start.day, 23, 59) + timedelta(6)
                 else:
                     end = dt(start.year, start.month, start.day, 23, 59) + timedelta(5-starting_dow)
