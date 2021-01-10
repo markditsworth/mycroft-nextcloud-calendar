@@ -112,7 +112,7 @@ class NextcloudCalendarSkill(MycroftSkill):
                 if starting_dow == 6:
                     end = dt(start.year, start.month, start.day, 23, 59) + timedelta(6)
                 else:
-                    end = dt(start.year, start.mongth, start.day, 23, 59) + timedelta(5-starting_dow)
+                    end = dt(start.year, start.month, start.day, 23, 59) + timedelta(5-starting_dow)
             else: # afternoon, evening, morning
                 end = start + timedelta(hours=4)
             
