@@ -18,6 +18,7 @@ import json
 
 from tatsu.util import asjson
 from datetime import datetime as dt
+from datetime import timedelta
 from datetime import timezone
 from adapt.intent import IntentBuilder
 from mycroft.skills.core import MycroftSkill
@@ -59,11 +60,68 @@ class NextcloudCalendarSkill(MycroftSkill):
             return None, None, None
     
     def convertSpokenTimeRangeToDT(self, time_range_string):
+        time_range_list = time_range_string.split(' ')
         # attempt to get starting datetime directly
         try:
-            start_dt = extract_datetime(time_range_string)
+            # try using mycroft's parser to get the start time
+            extracted_dt= extract_datetime(time_range_string)
+            if extracted_dt is None:
+                # is likely 'this week' or 'this weekend'
+                if 'week' in time_range_list:
+                    start = dt.now()
+                elif 'weekend' in time_range_list:
+                    # next upcoming saturday
+                    now = dt.now()
+                    current_dow = now.weekday()
+                    offset = 5 - current_dow
+                    if offset <= 0:
+                        offset = 0
+                    
+                    if 'next' in time_range_list:
+                        offset += 7
+                        
+                    start = dt(now.year, now.month, now.day) + timedelta(offset)
+                else:
+                    self.speak("i could not parse the given time range")
+                    assert False, "key word not supported."
+                        
+            else:
+                # 'next week' will get parsed undesireably by extract_datetime
+                if time_range_string == "next week":
+                    # get next upcoming sunday
+                    now = dt.now()
+                    current_dow = now.weekday()
+                    offset = 6 - current_dow
+                    if offset == 0:
+                        offset = 7
+                    start = dt(now.year, now.month, now.day) + timedelta(offset)
+                    
+                else:
+                    start = extracted_dt[0]
+            
+            # now that the start time is found get the end time from the time string
+            if 'day' in time_range_string or 'tomorrow' in time_range_string:
+                # handles today, monday, tuesday, etc
+                end = dt(start.year, start.month, start.day, 23, 59) # end on 11:59pm of same day
+            
+            elif 'weekend' in time_range_string:
+                end = dt(start.year, start.month, start.day, 23, 59) + timedelta(1)
+            
+            elif 'week' in time_range_string:
+                starting_dow = start.day
+                if starting_dow == 6:
+                    end = dt(start.year, start.month, start.day, 23, 59) + timedelta(6)
+                else:
+                    end = dt(start.year, start.mongth, start.day, 23, 59) + timedelta(5-starting_dow)
+            else: # afternoon, evening, morning
+                end = start + timedelta(hours=4)
+            
+            return start, end
+                
+            
         except Exception as e:
-            pass
+            self.speak("i could not parse given time range")
+            self.log.error(e)
         
         
     def makeEventString(self, name, start, end, rule=None):
@@ -264,18 +322,26 @@ END:VCALENDAR
             ast = self.PEGParser.parse(utt)
             parsed_utt = asjson(ast)
             
-            calendar_owner = parsed_utt['calendar_owner']
-            calendar_timeframe = parsed_utt['time_frame']
+            calendar_owner = parsed_utt.get('calendar_owner')
+            calendar_timeframe = parsed_utt.get('time_frame')
         except Exception as e:
             self.speak('there was an error parsing your utternace')
             self.log.error(e)
             return
         
-        start,end = self.convertSpokenTimeRangeToDT(calendar_timefram)
+        if calendar_owner == None:
+            calendar_owner = 'my'
         
+        # parser will return list if timeframe is two words (e.g. ["this", "weekend"])
+        if type(calendar_timefram) == list:
+            calendar_timeframe = ' '.join(calendar_timeframe)
         
+        start,end = self.convertSpokenTimeRangeToDT(calendar_timeframe)
         
-        
+        url, user, password = self.getConfigs()
+        calendarObj = self.getCalendar(self.nameToCalendar[calendar_owner], url, user, password)
+        events = self.searchEvents(calendarObj, start, end)
+        self.speakEvents(events)
 
     def stop(self):
         pass
