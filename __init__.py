@@ -13,9 +13,9 @@
 # limitations under the License.
 import caldav
 import hashlib
-import .peg
 import json
 
+from .peg import parser
 from tatsu.util import asjson
 from datetime import datetime as dt
 from datetime import timedelta
