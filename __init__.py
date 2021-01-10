@@ -13,7 +13,7 @@
 # limitations under the License.
 import caldav
 import hashlib
-import peg
+import .peg
 import json
 
 from tatsu.util import asjson
