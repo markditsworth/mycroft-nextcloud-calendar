@@ -121,6 +121,8 @@ class NextcloudCalendarSkill(MycroftSkill):
             else: # afternoon, evening, morning
                 end = start + timedelta(hours=4)
             
+            start = start.astimezone(default_timezone())
+            end = end.astimezone(default_timezone())
             self.log.info("start: {}".format(start))
             self.log.info("end: {}".format(end))
             return start, end
@@ -346,8 +348,6 @@ END:VCALENDAR
         
         start,end = self.convertSpokenTimeRangeToDT(calendar_timeframe)
         
-        start = start.astimezone(default_timezone())
-        end = end.astimezone(default_timezone())
         
         url, user, password = self.getConfigs()
         calendarObj = self.getCalendar(self.nameToCalendar[calendar_owner], url, user, password)
