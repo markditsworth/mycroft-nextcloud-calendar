@@ -280,7 +280,7 @@ END:VCALENDAR
         start_time,remaining_utt = extract_datetime(remaining_utt)              # get time from utterance
         owner = message.data.get('Owner')                                       # get calendar owner
         utt = normalize(utt).replace("'s","")                                   # normalize and drop 's in utterance
-        parsed_utt = asjson(self.PEGParser(utt))                                # parse utterance for owner
+        parsed_utt = asjson(self.PEGParser.parse(utt))                                # parse utterance for owner
         owner = parsed_utt.get('calendar_owner')
         if owner is None:                                                       # if parser failed to get owner, prompt user
             owner = self.get_response('ask.calendar.owner')
