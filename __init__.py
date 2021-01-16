@@ -255,21 +255,23 @@ END:VCALENDAR
         dow = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday']
         # assume nothing lasts longer than a year, so month and day being equivalent is
         # good enough to assume it starts and ends on the same day
-        if start.month == end.month and start.day == end.day:
-            if type(start) == type(dt.date(dt.now())):                            # if the event is all day, no need for times
+        if start.month == end.month and start.day == end.day:                                   # all day events will never start/end on same day
+            confirmationText = "on {} {} {} from {} to {}".format(dow[start.weekday()],         # e.g. "on Monday January 4th from 9am to 11am"
+                                                                monthString[start.month],
+                                                                ordinal(start.day),
+                                                                self.timeTextFriendly(start.hour,
+                                                                                    start.minute),
+                                                                self.timeTextFriendly(end.hour,
+                                                                                    end.minute))
+        else:
+            assert type(start) == type(dt.date(dt.now())), "unsupported multiday event"
+            if  end == start + timedelta(1):                                                    # if the event is all day, no need for times
                 confirmation_text = "on {} {} {}".format(dow[start.weekday()],
                                                     monthString[start.month],
                                                     ordinal(start.day))
             else:
-                confirmationText = "on {} {} {} from {} to {}".format(dow[start.weekday()],         # e.g. "on Monday January 4th from 9am to 11am"
-                                                                  monthString[start.month],
-                                                                  ordinal(start.day),
-                                                                  self.timeTextFriendly(start.hour,
-                                                                                     start.minute),
-                                                                  self.timeTextFriendly(end.hour,
-                                                                                     end.minute))
-        else:
-            confirmationText = "from {} {} {} to {} {} {}".format(dow[start.weekday()],         # e.g. "from Monday January 4th to Thursday January 7th"
+                end = end + timedelta(-1)
+                confirmationText = "from {} {} {} to {} {} {}".format(dow[start.weekday()],         # e.g. "from Monday January 4th to Thursday January 7th"
                                                                   monthString[start.month],
                                                                   ordinal(start.day),
                                                                   dow[end.weekday()],
