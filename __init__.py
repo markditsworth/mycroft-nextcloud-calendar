@@ -248,7 +248,12 @@ END:VCALENDAR
         # assume nothing lasts longer than a year, so month and day being equivalent is
         # good enough to assume it starts and ends on the same day
         if start.month == end.month and start.day == end.day:
-            confirmationText = "on {} {} {} from {} to {}".format(dow[start.weekday()],         # e.g. "on Monday January 4th from 9am to 11am"
+            if type(start) == type(dt.date(dt.now())):                            # if the event is all day, no need for times
+                confirmation_text = "on {} {} {}".format(dow[start.weekday()],
+                                                    monthString[start.month],
+                                                    ordinal(start.day))
+            else:
+                confirmationText = "on {} {} {} from {} to {}".format(dow[start.weekday()],         # e.g. "on Monday January 4th from 9am to 11am"
                                                                   monthString[start.month],
                                                                   ordinal(start.day),
                                                                   self.timeTextFriendly(start.hour,
