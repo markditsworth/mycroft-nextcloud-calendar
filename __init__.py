@@ -171,9 +171,17 @@ END:VCALENDAR
                                           end=end.astimezone(timezone.utc))     # pull events from caldav server, with start and end in utc
         
         for e in _events:
-            event_dict = {'name': e.vobject_instance.vevent.summary.value.strip(),                          # build dict with event info
-                          'start': e.vobject_instance.vevent.dtstart.value.astimezone(default_timezone()),  # convert to TZ
-                          'end': e.vobject_instance.vevent.dtend.value.astimezone(default_timezone())       # convert to local tz
+            name = e.vobject_instance.vevent.summary.value.strip()
+            start = e.vobject_instance.vevent.dtstart.value
+            end = e.vobject_instance.vevent.dtend.value
+
+            if type(start) == type(dt.now()):                                   # if start/end are datetimes
+                start = start.astimezone(default_timezone())                    # convert to local TZ
+                end = end.astimezone(default_timezone())
+                                                                                # otherwise, they are dates, and can be left
+            event_dict = {'name': name,                                         # build dict with event info
+                          'start': start,
+                          'end': end
                           }
             events.append(event_dict)                                           # add dict to list
         
