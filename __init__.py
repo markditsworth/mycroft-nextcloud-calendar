@@ -264,11 +264,9 @@ END:VCALENDAR
                                                                 self.timeTextFriendly(end.hour,
                                                                                     end.minute))
         else:
-            self.log.info("start: {}".format(start))
-            self.log.info("end: ".format(end))
             assert type(start) == type(dt.date(dt.now())), "unsupported multiday event"
             if  end == start + timedelta(1):                                                    # if the event is all day, no need for times
-                confirmation_text = "on {} {} {}".format(dow[start.weekday()],
+                confirmationText = "on {} {} {}".format(dow[start.weekday()],
                                                     monthString[start.month],
                                                     ordinal(start.day))
             else:
