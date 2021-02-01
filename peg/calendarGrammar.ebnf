@@ -20,7 +20,7 @@ ownership
     =
     | 'me'
     | 'i'
-    | 'my'
+    | 'my' [ "lowe" | "low" ]
     | "madison"
     | "milo"
     | "the" [ "family" ]
@@ -36,6 +36,26 @@ day_of_week
     | 'friday'
     | 'saturday'
     ;
+
+month
+    =
+    | 'january'
+    | 'february'
+    | 'march'
+    | 'april'
+    | 'may'
+    | 'june'
+    | 'july'
+    | 'august'
+    | 'september'
+    | 'october'
+    | 'november'
+    | 'december'
+    ;
+
+number = /\d+/ ;
+
+date = number[ 'st'|'nd'|'rd'|'th' ] ;
     
 time
     =
@@ -48,6 +68,7 @@ time
     | 'tomorrow'
     | 'today'
     | day_of_week
+    | month [ date ]
     ;
 
 calendar

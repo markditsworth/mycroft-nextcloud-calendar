@@ -209,6 +209,13 @@ class CalendarGrammarParser(Parser):
                 self._token('i')
             with self._option():
                 self._token('my')
+                with self._optional():
+                    with self._choice():
+                        with self._option():
+                            self._token('lowe')
+                        with self._option():
+                            self._token('low')
+                        self._error('no available options')
             with self._option():
                 self._token('madison')
             with self._option():
@@ -239,6 +246,54 @@ class CalendarGrammarParser(Parser):
             self._error('no available options')
 
     @tatsumasu()
+    def _month_(self):  # noqa
+        with self._choice():
+            with self._option():
+                self._token('january')
+            with self._option():
+                self._token('february')
+            with self._option():
+                self._token('march')
+            with self._option():
+                self._token('april')
+            with self._option():
+                self._token('may')
+            with self._option():
+                self._token('june')
+            with self._option():
+                self._token('july')
+            with self._option():
+                self._token('august')
+            with self._option():
+                self._token('september')
+            with self._option():
+                self._token('october')
+            with self._option():
+                self._token('november')
+            with self._option():
+                self._token('december')
+            self._error('no available options')
+
+    @tatsumasu()
+    def _number_(self):  # noqa
+        self._pattern('\\d+')
+
+    @tatsumasu()
+    def _date_(self):  # noqa
+        self._number_()
+        with self._optional():
+            with self._choice():
+                with self._option():
+                    self._token('st')
+                with self._option():
+                    self._token('nd')
+                with self._option():
+                    self._token('rd')
+                with self._option():
+                    self._token('th')
+                self._error('no available options')
+
+    @tatsumasu()
     def _time_(self):  # noqa
         with self._choice():
             with self._option():
@@ -259,6 +314,10 @@ class CalendarGrammarParser(Parser):
                 self._token('today')
             with self._option():
                 self._day_of_week_()
+            with self._option():
+                self._month_()
+                with self._optional():
+                    self._date_()
             self._error('no available options')
 
     @tatsumasu()
@@ -316,6 +375,15 @@ class CalendarGrammarSemantics(object):
         return ast
 
     def day_of_week(self, ast):  # noqa
+        return ast
+
+    def month(self, ast):  # noqa
+        return ast
+
+    def number(self, ast):  # noqa
+        return ast
+
+    def date(self, ast):  # noqa
         return ast
 
     def time(self, ast):  # noqa

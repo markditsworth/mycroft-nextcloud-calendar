@@ -15,7 +15,9 @@ how busy am i today
 what is milo up to this week
 what is on my schedule next week
 what are madison's events tomorrow
-tell me my schedule tomorrow'''
+tell me my schedule tomorrow
+tell me my lowe schedule next week
+add an event to my calendar on march 3rd at 3pm'''
 
 
 test_lines = tests.split('\n')
