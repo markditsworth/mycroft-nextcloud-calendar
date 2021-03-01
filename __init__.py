@@ -190,6 +190,10 @@ END:VCALENDAR
     
     # speak the given list of events
     def speakEvents(self, events):
+        if len(events) == 0:
+            self.speak_dialog('no.events')
+            return
+            
         for e in events:
             duration_str = self.confirmEventDetails(e['start'], e['end'])       # use the confirmEventDeatils function to get readable string
             self.speak(e['name'] + ' ' + duration_str)
